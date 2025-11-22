@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot name="ackermann_rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="base_radius" value="0.8"/>
+  <xacro:property name="base_height" value="0.2"/>
+
+  <xacro:property name="shoulder_radius" value="0.15"/>
+  <xacro:property name="shoulder_length" value="0.8"/>
+
+  <xacro:property name="wrist_radius" value="0.12"/>
+  <xacro:property name="wrist_length" value="0.7"/>
+
+  <material name="grey">
+    <color rgba="0.7 0.7 0.7 1"/>
+  </material>
+
+  <material name="green">
+    <color rgba="0 0.6 0 1"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+
+  <xacro:macro name="cyl_link" params="name radius length rpy color">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="${rpy}"/>
+        <material name="${color}"/>
+      </visual>
+    </link>
+  </xacro:macro>
+
+  <xacro:cyl_link name="base" radius="${base_radius}" length="${base_height}" rpy="0 0 0" color="green"/>
+  <xacro:cyl_link name="shoulder" radius="${shoulder_radius}" length="${shoulder_length}" rpy="0 0 0" color="grey"/>
+  <xacro:cyl_link name="wrist" radius="${wrist_radius}" length="${wrist_length}" rpy="0 1.5708 0" color="blue"/>
+
+  <joint name="base_to_shoulder" type="revolute">
+    <parent link="base"/>
+    <child link="shoulder"/>
+    <origin xyz="0 0 0.50" rpy="0 0 0"/> 
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14" upper="3.14" effort="50" velocity="1.0"/>
+  </joint>
+
+  <joint name="shoulder_to_wrist" type="revolute">
+    <parent link="shoulder"/>
+    <child link="wrist"/>
+    <origin xyz="0 0 0.40" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="50" velocity="1.0"/>
+  </joint>
+
+</robot>
